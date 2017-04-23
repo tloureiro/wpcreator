@@ -57,7 +57,7 @@ class WPCreator {
 		$output = shell_exec( 'mkdir ' . get_home_path() . $slug );
 		$output .= chdir( get_home_path() . $slug );
 		$output .= shell_exec( 'wp core download' );
-		$output .= shell_exec( 'wp core config --dbname=wordpress --dbuser=admin --dbpass=admin --dbprefix=' . $slug . '_ --extra-php="define( \'FS_METHOD\', \'direct\' );"' );
+		$output .= shell_exec( 'wp core config --dbname=' . DB_NAME . ' --dbuser=' . DB_USER . ' --dbhost=' . DB_HOST . ' --dbpass=' . DB_PASSWORD . ' --dbprefix=' . $slug . '_ --extra-php="define( \'FS_METHOD\', \'direct\' );"' );
 		$output .= shell_exec( 'wp db create' );
 		$output .= shell_exec( 'wp core install --url="' . site_url() . '/' . $slug . '" --title="' . $title . '" --admin_user="' . $admin_user . '" --admin_password="' . $admin_password . '" --admin_email="o@o.com" --skip-email' );
 
