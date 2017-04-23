@@ -29,6 +29,16 @@ class Settings {
 				<input type="text" name="title" >
 			</div>
 
+            <div>
+                <label for="admin-user"><?php echo esc_html__( 'Admin User', 'wpcreator' );?>:</label>
+                <input type="text" name="admin-user" >
+            </div>
+
+            <div>
+                <label for="admin-password"><?php echo esc_html__( 'Admin Password', 'wpcreator' );?>:</label>
+                <input type="text" name="admin-password" >
+            </div>
+
 			<?php submit_button( 'Create Wordpress Instance' ); ?>
 		</form> <?php
 	}

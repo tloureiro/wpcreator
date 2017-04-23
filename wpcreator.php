@@ -32,17 +32,19 @@ class WPCreator {
 	public function create_wp_action_handler() {
 
 		if ( ! current_user_can( 'administrator' ) ) {
-			wp_die( esc_html__( 'You do not have sufficient permissions to access this page.' ) );
+			wp_die( esc_html__( 'You do not have sufficient permissions to access this page.', 'wpcreator' ) );
 		}
 
 		$url = urldecode( $_POST['_wp_http_referer']);
 
 		$slug = filter_input( INPUT_POST, 'slug', FILTER_SANITIZE_STRING );
 		$title = filter_input( INPUT_POST, 'title', FILTER_SANITIZE_STRING );
+		$admin_user = filter_input( INPUT_POST, 'admin-user', FILTER_SANITIZE_STRING );
+		$admin_password = filter_input( INPUT_POST, 'admin-password', FILTER_SANITIZE_STRING );
 
 		if ( ! empty( $slug ) && ! empty( $title ) ) {
 
-			$success = WPCreator::create_wp( $slug, $title );
+			$success = $this->create_wp( $slug, $title, $admin_user, $admin_password );
 			wp_safe_redirect( add_query_arg( 'created', $success, $url ) );
 
 		} else {
@@ -50,9 +52,19 @@ class WPCreator {
 		}
 	}
 
-	public static function create_wp( $slug, $title ) {
-		$output = shell_exec( '' );
+	public static function create_wp( $slug, $title, $admin_user, $admin_password ) {
+
+		$output = shell_exec( 'mkdir ' . get_home_path() . $slug );
+		$output .= chdir( get_home_path() . $slug );
+		$output .= shell_exec( 'wp core download' );
+		$output .= shell_exec( 'wp core config --dbname=wordpress --dbuser=admin --dbpass=admin --dbprefix=' . $slug . '_ --extra-php="define( \'FS_METHOD\', \'direct\' );"' );
+		$output .= shell_exec( 'wp db create' );
+		$output .= shell_exec( 'wp core install --url="' . site_url() . '/' . $slug . '" --title="' . $title . '" --admin_user="' . $admin_user . '" --admin_password="' . $admin_password . '" --admin_email="o@o.com" --skip-email' );
+
+		echo $output;
 	}
+
+
 
 }
 
