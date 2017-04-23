@@ -64,6 +64,22 @@ class WPCreator {
 		echo $output;
 	}
 
+	public static function get_created_instances() {
+
+		$directories = glob( get_home_path() . '/*' , GLOB_ONLYDIR );
+		$instances = [];
+
+		foreach ( $directories as $directory ) {
+
+			if ( file_exists( $directory . '/wp-config.php' ) ) {
+
+				$instances[] = basename( $directory );
+			}
+		}
+
+		return $instances;
+	}
+
 
 
 }
